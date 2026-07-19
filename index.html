@@ -104,6 +104,27 @@
     font-weight: 700; color: #07031a; background: linear-gradient(90deg, #ffd76e, #ff9d5c);
     padding: 14px 38px; border-radius: 999px; letter-spacing: 2px;
     box-shadow: 0 4px 30px rgba(255, 180, 60, 0.5); animation: pulse 1.6s ease-in-out infinite; }
+
+  /* compact HUD for phones — keep the slingshot, not the chrome, on screen */
+  @media (max-width: 600px) {
+    .hud-panel { top: 10px; left: 10px; padding: 8px 12px; border-radius: 10px; }
+    .hud-title { font-size: 11px; letter-spacing: 1px; }
+    .hud-row { gap: 14px; margin-top: 4px; }
+    .hud-stat .label { font-size: 8px; letter-spacing: 1px; }
+    .hud-stat .value { font-size: 14px; }
+    #flight-dist { top: 12px; font-size: 28px; }
+    #flight-dist .unit { font-size: 14px; }
+    #flight-stars { top: 48px; font-size: 15px; }
+    #hint { bottom: 68px; font-size: 13px; padding: 8px 16px; width: max-content; max-width: 92vw; }
+    #aim-readout { bottom: 16px; }
+    #aim-text { font-size: 13px; }
+    #power-bar-wrap { width: min(220px, 60vw); height: 11px; }
+    #result-card { padding: 18px 26px; border-radius: 16px; max-width: 92vw; }
+    #result-dist { font-size: 38px; }
+    #result-dist .unit { font-size: 17px; }
+    #result-rank { font-size: 12px; letter-spacing: 2px; }
+    #result-record { font-size: 15px; }
+  }
 </style>
 </head>
 <body>
