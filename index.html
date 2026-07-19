@@ -2,14 +2,15 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
 <title>Moon Sling Shots 🌙</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Nunito:wght@600;800&display=swap" rel="stylesheet">
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  html, body { width: 100%; height: 100%; overflow: hidden; background: #07031a; }
-  canvas { display: block; }
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { width: 100%; height: 100%; overflow: hidden; background: #07031a;
+    overscroll-behavior: none; user-select: none; -webkit-user-select: none; }
+  canvas { display: block; touch-action: none; }
   #ui { position: fixed; inset: 0; pointer-events: none; font-family: 'Nunito', sans-serif; color: #fff; }
 
   .hud-panel {
@@ -122,7 +123,7 @@
     <div id="aim-text">POWER 0% &nbsp;•&nbsp; ANGLE 0°</div>
     <div id="power-bar-wrap"><div id="power-bar"></div></div>
   </div>
-  <div id="hint">🖱️ Grab the moon — pull back &amp; release to launch!</div>
+  <div id="hint">👆 Drag anywhere — pull back &amp; release to launch!</div>
   <div id="result-card">
     <div id="result-rank">CRATER HOPPER</div>
     <div id="result-dist">312<span class="unit"> m</span></div>
@@ -695,22 +696,28 @@ function mouseToWorld(e) {
   raycaster.ray.intersectPlane(aimPlane, hit);
   return hit;
 }
+// Relative drag: touch/click ANYWHERE and drag — the moon follows the drag
+// delta, so a finger never has to sit on (and occlude) the moon itself.
+const dragStart = new THREE.Vector3();
+let dragSens = 1;
 renderer.domElement.addEventListener('pointerdown', e => {
   if (state !== 'aim') return;
   const w = mouseToWorld(e);
-  if (w && w.distanceTo(moon.position) < MAX_PULL * 1.4) {
-    dragging = true;
-    ui.hint.style.display = 'none';
-    ui.aim.classList.add('show');
-    creakStart();
-    renderer.domElement.setPointerCapture(e.pointerId);
-  }
+  if (!w) return;
+  e.preventDefault();
+  dragStart.copy(w);
+  dragSens = e.pointerType === 'touch' ? 1.8 : 1.1; // thumbs travel less than mice
+  dragging = true;
+  ui.hint.style.display = 'none';
+  ui.aim.classList.add('show');
+  creakStart();
+  try { renderer.domElement.setPointerCapture(e.pointerId); } catch {}
 });
 renderer.domElement.addEventListener('pointermove', e => {
   if (!dragging) return;
   const w = mouseToWorld(e);
   if (!w) return;
-  const pull = w.clone().sub(ANCHOR);
+  const pull = w.clone().sub(dragStart).multiplyScalar(dragSens);
   pull.z = 0;
   if (pull.length() > MAX_PULL) pull.setLength(MAX_PULL);
   moon.position.copy(ANCHOR).add(pull);
@@ -718,6 +725,15 @@ renderer.domElement.addEventListener('pointermove', e => {
   const gy = groundHeight(moon.position.x) + MOON_R * 0.6;
   if (moon.position.y < gy) moon.position.y = gy;
 });
+function cancelDrag() {
+  if (!dragging) return;
+  dragging = false;
+  creakStop();
+  ui.aim.classList.remove('show');
+  moon.position.copy(ANCHOR);
+  ui.hint.style.display = '';
+}
+renderer.domElement.addEventListener('pointercancel', cancelDrag);
 renderer.domElement.addEventListener('pointerup', () => {
   if (!dragging) return;
   dragging = false;
