@@ -1,0 +1,33 @@
+{
+  "name": "moon-sling-shots",
+  "version": "1.0.0",
+  "description": "A 3D browser game: grab a moon, pull back the slingshot, and see how far you can fling it across an alien landscape.",
+  "main": "index.html",
+  "type": "module",
+  "scripts": {
+    "dev": "npx serve .",
+    "start": "npx serve .",
+    "test": "echo \"No tests configured\" && exit 0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stozo04/moon-sling-shots.git"
+  },
+  "keywords": [
+    "game",
+    "3d",
+    "three.js",
+    "physics",
+    "slingshot"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/stozo04/moon-sling-shots/issues"
+  },
+  "homepage": "https://github.com/stozo04/moon-sling-shots#readme",
+  "dependencies": {
+    "@vercel/analytics": "^2.0.1",
+    "@vercel/speed-insights": "^2.0.0"
+  }
+}
