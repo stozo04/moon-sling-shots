@@ -103,7 +103,6 @@ def edited_trees(rel_paths):
 def drift():
     """(rel_path, {harness: 'same'|'differs'|'missing'}) for every path that is not identical."""
     trees = {h: tracked(h) for h in HARNESSES}
-    base = HARNESSES[0]
     found = []
     for rel in sorted(set().union(*(t.keys() for t in trees.values()))):
         state = {}
@@ -113,7 +112,7 @@ def drift():
             if rel in trees[h] and trees[h][rel].exists():
                 ref_harness = h
                 break
-        
+
         for h in HARNESSES:
             # `git ls-files` still lists a tracked file that has been deleted on disk, so
             # existence is checked separately — an unstaged delete is drift like any other.

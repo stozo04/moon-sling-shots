@@ -9,3 +9,11 @@ Reused the reference checker and 16 regression cases with remote-default resolut
 Validation: npm test passes (sync: 1 placeholder x 3; all 16 regression cases, including missing/drifted files, identical foreign paths in both slash styles, source-preserving repair, CRLF and ambiguous-source refusal). Root pointers and referenced documents verified; final diff inspected and git diff --check passes.
 
 Skipped: dependency installation, game/browser/touch checks and deployment, since no gameplay or UI code changed. No product tests or build gate existed. No interactive agent behavior evaluation, merge, release or deployment performed.
+
+## Remote review follow-up
+
+Retained Cursor Agent's comparison-base fix from b4778fc: when the Claude copy
+is missing, compare surviving Cursor/Codex files rather than calling both same.
+Added a 17th regression proving differing survivors are reported and ambiguous
+repair refuses without altering either copy. All 17 cases and mirror parity pass.
+Removed the now-unused base variable and trailing whitespace from the bot change.
